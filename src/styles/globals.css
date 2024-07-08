@@ -3,13 +3,21 @@
 @tailwind utilities;
 
 body {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .default-line-color {
-    @apply bg-zinc-50;
+  @apply bg-zinc-50;
 }
 
 .changed-line-color {
-    @apply bg-teal-500;
+  @apply bg-teal-500;
+}
+
+.slider::-moz-range-thumb {
+  border-radius: 50%;
+}
+
+.slider::-webkit-slider-thumb {
+  border-radius: 50%;
 }
