@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    overflow: hidden;
+}
+
+.default-line-color {
+    @apply bg-zinc-50;
+}
+
+.changed-line-color {
+    @apply bg-teal-500;
+}
