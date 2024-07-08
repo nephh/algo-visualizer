@@ -10,7 +10,7 @@ export function Slider({
   isDisabled: boolean;
 }) {
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex gap-2 justify-center items-center">
       <span className="text-center text-zinc-300">Slow</span>
       <input
         type="range"
@@ -20,7 +20,7 @@ export function Slider({
         value={value}
         onChange={handleChange}
         disabled={isDisabled}
-        className="slider h-2 w-full cursor-pointer appearance-none rounded-lg bg-zinc-700 opacity-70"
+        className="w-full h-2 rounded-lg opacity-70 appearance-none cursor-pointer slider bg-zinc-700"
       />
       <span className="text-center text-zinc-300">Fast</span>
     </div>
