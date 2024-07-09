@@ -22,6 +22,20 @@ export default function HomePage() {
     console.log(selectedAlgorithm);
   }, [selectedAlgorithm]);
 
+  console.log(array);
+
+  function sortArray(arr: number[]): void {
+    for (let i = 0; i < arr.length; ++i) {
+      for (let j = 0; j < arr.length - 1 - i; ++j) {
+        if (arr[j] > arr[j + 1]) {
+          const temp = arr[j];
+          arr[j] = arr[j + 1];
+          arr[j + 1] = temp;
+        }
+      }
+    }
+  }
+
   return (
     <main className="absolute top-0 h-screen w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#150229_1px)] bg-[size:40px_40px]">
       <div className="flex h-full justify-center">
