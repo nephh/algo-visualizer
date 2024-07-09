@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { Slider } from "./components/input/Slider";
 import { Select } from "./components/input/Select";
 import { algorithmOptions } from "@/lib/utils";
-import { SortingType } from "@/lib/types";
+import type { SortingType } from "@/lib/types";
 
 export default function HomePage() {
   const {
@@ -15,6 +15,7 @@ export default function HomePage() {
     setSpeed,
     setSelectedAlgorithm,
     selectedAlgorithm,
+    startSorting,
   } = useSortingAlgorithmContext();
 
   useEffect(() => {
@@ -23,16 +24,16 @@ export default function HomePage() {
 
   return (
     <main className="absolute top-0 h-screen w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#150229_1px)] bg-[size:40px_40px]">
-      <div className="flex justify-center h-full">
+      <div className="flex h-full justify-center">
         <div
           id="content-container"
-          className="flex flex-col px-4 w-full lg:px-0 max-w-[1020px]"
+          className="flex w-full max-w-[1020px] flex-col px-4 lg:px-0"
         >
-          <div className="flex relative justify-between items-center w-full h-[66px]">
-            <h1 className="hidden text-2xl font-light md:flex text-zinc-300">
+          <div className="relative flex h-[66px] w-full items-center justify-between">
+            <h1 className="hidden text-2xl font-light text-zinc-300 md:flex">
               Sorting Visualizer
             </h1>
-            <div className="flex gap-6 justify-center items-center">
+            <div className="flex items-center justify-center gap-6">
               <Slider
                 isDisabled={isSorting}
                 value={speed}
@@ -46,14 +47,21 @@ export default function HomePage() {
                   setSelectedAlgorithm(e.target.value as SortingType)
                 }
               />
+              <button
+                className="rounded-lg bg-zinc-300 p-4 text-black"
+                onClick={() => startSorting([])}
+              >
+                Start
+              </button>
             </div>
           </div>
           <div className="relative h-[calc(100vh-66px)] w-full">
-            <div className="flex absolute right-0 left-0 justify-center items-end mx-auto w-full bottom-[32px]">
+            <div className="absolute bottom-[32px] left-0 right-0 mx-auto flex w-full items-end justify-center">
+              {/* Lines to be sorted */}
               {array.map((value, index) => (
                 <div
                   key={index}
-                  className="relative mx-0.5 w-1 rounded-lg shadow-lg opacity-70 array-line default-line-color"
+                  className="array-line default-line-color relative mx-0.5 w-1 rounded-lg opacity-70 shadow-lg"
                   style={{ height: `${value}px` }}
                 ></div>
               ))}

@@ -1,6 +1,6 @@
 "use client";
 
-import { SortingType } from "@/lib/types";
+import type { AnimationArrayType, SortingType } from "@/lib/types";
 import { MIN_SORTING_SPEED, randomIntFromInterval } from "@/lib/utils";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -16,7 +16,7 @@ interface SortingAlgorithmContextType {
   animationCompleted: boolean;
   setAnimationCompleted: (animationCompleted: boolean) => void;
   resetArray: () => void;
-  startSorting: () => void;
+  startSorting: (animations: AnimationArrayType) => void;
 }
 
 const SortingAlgorithmContext = createContext<
@@ -64,7 +64,86 @@ export const SortingAlgorithmProvider = ({
     setIsSorting(false);
   }
 
-  function startSorting() {}
+  const startSorting = (animations: AnimationArrayType) => {
+    setIsSorting(true);
+
+    const inverseSpeed = (1 / speed) * 200;
+    const arrLines = document.getElementsByClassName(
+      "array-line",
+    ) as HTMLCollectionOf<HTMLElement>;
+
+    const updateClassList = (
+      indexes: number[],
+      addClassName: string,
+      removeClassName: string,
+    ) => {
+      indexes.forEach((index) => {
+        if (!arrLines[index]) {
+          return;
+        }
+
+        arrLines[index].classList.add(addClassName);
+        arrLines[index].classList.remove(removeClassName);
+      });
+    };
+
+    const updateHeightValue = (
+      lineIndex: number,
+      newHeight: number | undefined,
+    ) => {
+      if (!arrLines[lineIndex]) {
+        return;
+      }
+
+      arrLines[lineIndex].style.height = `${newHeight}px`;
+    };
+
+    animations.forEach((animation, index) => {
+      setTimeout(() => {
+        const [lineIndexes, isSwap] = animation;
+        if (!isSwap) {
+          updateClassList(
+            lineIndexes,
+            "change-line-color",
+            "default-line-color",
+          );
+          setTimeout(
+            () =>
+              updateClassList(
+                lineIndexes,
+                "default-line-color",
+                "change-line-color",
+              ),
+            inverseSpeed,
+          );
+        } else {
+          const [lineIndex, newHeight] = lineIndexes;
+          if (!lineIndex) {
+            return;
+          }
+
+          updateHeightValue(lineIndex, newHeight);
+        }
+      }, index * inverseSpeed);
+    });
+
+    const finalTimeout = animations.length * inverseSpeed;
+    setTimeout(() => {
+      Array.from(arrLines).forEach((line) => {
+        line.classList.add("pulse-animation", "change-line-color");
+        line.classList.remove("default-line-color");
+      });
+
+      setTimeout(() => {
+        Array.from(arrLines).forEach((line) => {
+          line.classList.remove("pulse-animation", "change-line-color");
+          line.classList.add("default-line-color");
+        });
+        setIsSorting(false);
+        setAnimationCompleted(true);
+      }, 1000);
+    }, finalTimeout);
+  };
 
   const value = {
     array,
