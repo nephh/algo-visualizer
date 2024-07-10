@@ -16,10 +16,10 @@ export function Slider({
         type="range"
         min={MIN_SORTING_SPEED}
         max={MAX_SORTING_SPEED}
-        step={10}
+        step={40}
         value={value}
         onChange={handleChange}
-        disabled={isDisabled}
+        // disabled={isDisabled}
         className="w-full h-2 rounded-lg opacity-70 appearance-none cursor-pointer slider bg-zinc-700"
       />
       <span className="text-center text-zinc-300">Fast</span>

@@ -1,39 +1,62 @@
 "use client";
 
 import { useSortingAlgorithmContext } from "@/context/Visualizer";
-import { useEffect } from "react";
 import { Slider } from "./components/input/Slider";
 import { Select } from "./components/input/Select";
-import { algorithmOptions } from "@/lib/utils";
+import { algorithmOptions, bubbleSort, delay, qs } from "@/lib/utils";
 import type { SortingType } from "@/lib/types";
+import { useEffect, useRef } from "react";
+import { set } from "zod";
 
 export default function HomePage() {
   const {
     array,
     isSorting,
     speed,
+    selectedAlgorithm,
+    setIsSorting,
     setSpeed,
     setSelectedAlgorithm,
-    selectedAlgorithm,
-    startSorting,
+    setArray,
   } = useSortingAlgorithmContext();
 
+  const speedRef = useRef(speed);
+
+  // Update the ref whenever the speed state changes
+  // currently not working when sort function is in another file
   useEffect(() => {
-    console.log(selectedAlgorithm);
-  }, [selectedAlgorithm]);
+    speedRef.current = speed;
+  }, [speed]);
 
-  console.log(array);
-
-  function sortArray(arr: number[]): void {
-    for (let i = 0; i < arr.length; ++i) {
-      for (let j = 0; j < arr.length - 1 - i; ++j) {
-        if (arr[j] > arr[j + 1]) {
-          const temp = arr[j];
-          arr[j] = arr[j + 1];
-          arr[j + 1] = temp;
-        }
-      }
+  async function sortArray(arr: number[]) {
+    setIsSorting(true);
+    const lines = document.getElementsByClassName("array-line");
+    const tempArray = [...arr];
+    switch (selectedAlgorithm) {
+      case "bubble":
+        await bubbleSort(tempArray, lines, () => speedRef.current, setArray);
+        break;
+      case "quick":
+        await qs(
+          arr,
+          0,
+          arr.length - 1,
+          () => speedRef.current,
+          setArray,
+          lines,
+        );
+        break;
+      // case "merge":
+      //   mergeSort(tempArray, lines, 0, tempArray.length - 1);
+      //   break;
+      // case "insertion":
+      //   insertionSort(tempArray, lines);
+      //   break;
+      // case "selection":
+      //   selectionSort(tempArray, lines);
+      //   break;
     }
+    setIsSorting(false);
   }
 
   return (
@@ -55,7 +78,7 @@ export default function HomePage() {
               />
               <Select
                 isDisabled={isSorting}
-                defaultValue="bubble"
+                defaultValue={selectedAlgorithm}
                 options={algorithmOptions}
                 onChange={(e) =>
                   setSelectedAlgorithm(e.target.value as SortingType)
@@ -63,7 +86,8 @@ export default function HomePage() {
               />
               <button
                 className="rounded-lg bg-zinc-300 p-4 text-black"
-                onClick={() => startSorting([])}
+                onClick={() => sortArray(array)}
+                disabled={isSorting}
               >
                 Start
               </button>
