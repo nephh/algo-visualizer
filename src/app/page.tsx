@@ -3,10 +3,9 @@
 import { useSortingAlgorithmContext } from "@/context/Visualizer";
 import { Slider } from "./components/input/Slider";
 import { Select } from "./components/input/Select";
-import { algorithmOptions, bubbleSort, delay, qs } from "@/lib/utils";
+import { algorithmOptions, bubbleSort, qs } from "@/lib/utils";
 import type { SortingType } from "@/lib/types";
 import { useEffect, useRef } from "react";
-import { set } from "zod";
 
 export default function HomePage() {
   const {
@@ -14,10 +13,13 @@ export default function HomePage() {
     isSorting,
     speed,
     selectedAlgorithm,
+    sorted,
+    setSorted,
     setIsSorting,
     setSpeed,
     setSelectedAlgorithm,
     setArray,
+    resetArray,
   } = useSortingAlgorithmContext();
 
   const speedRef = useRef(speed);
@@ -30,6 +32,7 @@ export default function HomePage() {
 
   async function sortArray(arr: number[]) {
     setIsSorting(true);
+    setSorted(false);
     const lines = document.getElementsByClassName("array-line");
     const tempArray = [...arr];
     switch (selectedAlgorithm) {
@@ -56,7 +59,9 @@ export default function HomePage() {
       //   selectionSort(tempArray, lines);
       //   break;
     }
+
     setIsSorting(false);
+    setSorted(true);
   }
 
   return (
@@ -86,10 +91,10 @@ export default function HomePage() {
               />
               <button
                 className="rounded-lg bg-zinc-300 p-4 text-black"
-                onClick={() => sortArray(array)}
+                onClick={!sorted ? () => sortArray(array) : () => resetArray()}
                 disabled={isSorting}
               >
-                Start
+                {!sorted ? "Start" : "Reset"}
               </button>
             </div>
           </div>

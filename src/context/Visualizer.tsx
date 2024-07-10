@@ -1,6 +1,6 @@
 "use client";
 
-import type { AnimationArrayType, SortingType } from "@/lib/types";
+import type { SortingType } from "@/lib/types";
 import { randomIntFromInterval } from "@/lib/utils";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -13,9 +13,9 @@ interface SortingAlgorithmContextType {
   setIsSorting: (isSorting: boolean) => void;
   speed: number;
   setSpeed: (speed: number) => void;
-  animationCompleted: boolean;
-  setAnimationCompleted: (animationCompleted: boolean) => void;
   resetArray: () => void;
+  sorted: boolean;
+  setSorted: (sorted: boolean) => void;
 }
 
 const SortingAlgorithmContext = createContext<
@@ -32,7 +32,7 @@ export const SortingAlgorithmProvider = ({
     useState<SortingType>("quick");
   const [isSorting, setIsSorting] = useState(false);
   const [speed, setSpeed] = useState(126);
-  const [animationCompleted, setAnimationCompleted] = useState(false);
+  const [sorted, setSorted] = useState(false);
 
   useEffect(() => {
     resetArray();
@@ -43,6 +43,7 @@ export const SortingAlgorithmProvider = ({
     };
   }, []);
 
+  // Would be nice to make the sorting stop if we reset the array
   function resetArray() {
     const contentContainer = document.getElementById("content-container");
 
@@ -54,12 +55,17 @@ export const SortingAlgorithmProvider = ({
     const numLines = contentContainer.clientWidth / 8;
     const maxLineHeight = Math.max(contentContainer.clientHeight - 340);
 
+    const lines = document.getElementsByClassName("array-line");
     for (let i = 0; i < numLines; ++i) {
       tempArray.push(randomIntFromInterval(31, maxLineHeight));
     }
 
+    for (const line of lines) {
+      line.classList.remove("changed-line-color");
+    }
+
     setArray(tempArray);
-    setAnimationCompleted(false);
+    setSorted(false);
     setIsSorting(false);
   }
 
@@ -72,9 +78,9 @@ export const SortingAlgorithmProvider = ({
     setIsSorting,
     speed,
     setSpeed,
-    animationCompleted,
-    setAnimationCompleted,
     resetArray,
+    sorted,
+    setSorted,
   };
 
   return (
