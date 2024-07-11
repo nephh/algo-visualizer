@@ -1,53 +1,75 @@
 "use client";
 
-import { useSortingAlgorithmContext } from "@/context/Visualizer";
 import { Slider } from "./components/input/Slider";
 import { Select } from "./components/input/Select";
-import { algorithmOptions, bubbleSort, qs } from "@/lib/utils";
+import {
+  algorithmOptions,
+  bubbleSort,
+  qs,
+  quicksort,
+  randomIntFromInterval,
+} from "@/lib/utils";
 import type { SortingType } from "@/lib/types";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function HomePage() {
-  const {
-    array,
-    isSorting,
-    speed,
-    selectedAlgorithm,
-    sorted,
-    setSorted,
-    setIsSorting,
-    setSpeed,
-    setSelectedAlgorithm,
-    setArray,
-    resetArray,
-  } = useSortingAlgorithmContext();
+  const [array, setArray] = useState<number[]>([]);
+  const [selectedAlgorithm, setSelectedAlgorithm] =
+    useState<SortingType>("quick");
+  const [isSorting, setIsSorting] = useState(false);
+  const [speed, setSpeed] = useState(126);
+  const [sorted, setSorted] = useState(false);
+
+  useEffect(() => {
+    resetArray();
+    window.addEventListener("resize", resetArray);
+
+    return () => {
+      window.removeEventListener("resize", resetArray);
+    };
+  }, []);
 
   const speedRef = useRef(speed);
-
-  // Update the ref whenever the speed state changes
-  // currently not working when sort function is in another file
   useEffect(() => {
     speedRef.current = speed;
   }, [speed]);
+
+  // Would be nice to make the sorting stop if we reset the array
+  function resetArray() {
+    const contentContainer = document.getElementById("content-container");
+
+    if (!contentContainer) {
+      return;
+    }
+
+    const tempArray: number[] = [];
+    const numLines = contentContainer.clientWidth / 8;
+    const maxLineHeight = Math.max(contentContainer.clientHeight - 340);
+
+    const lines = document.getElementsByClassName("array-line");
+    for (let i = 0; i < numLines; ++i) {
+      tempArray.push(randomIntFromInterval(31, maxLineHeight));
+    }
+
+    for (const line of lines) {
+      line.classList.remove("changed-line-color");
+    }
+
+    setArray(tempArray);
+    setSorted(false);
+    setIsSorting(false);
+  }
 
   async function sortArray(arr: number[]) {
     setIsSorting(true);
     setSorted(false);
     const lines = document.getElementsByClassName("array-line");
-    const tempArray = [...arr];
     switch (selectedAlgorithm) {
       case "bubble":
-        await bubbleSort(tempArray, lines, () => speedRef.current, setArray);
+        await bubbleSort(arr, () => speedRef.current, setArray, lines);
         break;
       case "quick":
-        await qs(
-          arr,
-          0,
-          arr.length - 1,
-          () => speedRef.current,
-          setArray,
-          lines,
-        );
+        await quicksort(arr, () => speedRef.current, setArray, lines);
         break;
       // case "merge":
       //   mergeSort(tempArray, lines, 0, tempArray.length - 1);

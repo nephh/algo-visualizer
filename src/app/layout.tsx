@@ -1,4 +1,3 @@
-import { SortingAlgorithmProvider } from "@/context/Visualizer";
 import "@/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
@@ -15,9 +14,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
-        <SortingAlgorithmProvider>{children}</SortingAlgorithmProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

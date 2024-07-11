@@ -19,9 +19,9 @@ export const algorithmOptions = [
 
 export async function bubbleSort(
   arr: number[],
-  lines: HTMLCollectionOf<Element>,
   getSpeed: () => number,
   setArray: (arr: number[]) => void,
+  lines: HTMLCollectionOf<Element>,
 ) {
   for (let i = 0; i < arr.length; ++i) {
     for (let j = 0; j < arr.length - 1 - i; ++j) {
@@ -86,4 +86,13 @@ async function partition(
   setArray([...arr]);
 
   return idx;
+}
+
+export async function quicksort(
+  arr: number[],
+  getSpeed: () => number,
+  setArray: (arr: number[]) => void,
+  lines: HTMLCollectionOf<Element>,
+) {
+  await qs(arr, 0, arr.length - 1, getSpeed, setArray, lines);
 }
