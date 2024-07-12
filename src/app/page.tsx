@@ -86,7 +86,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="absolute top-0 h-screen w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#150229_1px)] bg-[size:40px_40px]">
+    <main className="absolute top-0 h-screen w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#09090b_1px)] bg-[size:40px_40px]">
       <div className="flex justify-center h-full">
         <div
           id="content-container"
