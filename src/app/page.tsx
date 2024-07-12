@@ -1,11 +1,10 @@
 "use client";
 
-import { Slider } from "./components/input/Slider";
-import { Select } from "./components/input/Select";
+import { Slider } from "./components/Slider";
+import { Select } from "./components/Select";
 import {
   algorithmOptions,
   bubbleSort,
-  qs,
   quicksort,
   randomIntFromInterval,
 } from "@/lib/utils";
@@ -88,16 +87,16 @@ export default function HomePage() {
 
   return (
     <main className="absolute top-0 h-screen w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#150229_1px)] bg-[size:40px_40px]">
-      <div className="flex h-full justify-center">
+      <div className="flex justify-center h-full">
         <div
           id="content-container"
-          className="flex w-full max-w-[1020px] flex-col px-4 lg:px-0"
+          className="flex flex-col px-4 w-full lg:px-0 max-w-[1020px]"
         >
-          <div className="relative flex h-[66px] w-full items-center justify-between">
-            <h1 className="hidden text-2xl font-light text-zinc-300 md:flex">
+          <div className="flex relative justify-between items-center w-full h-[66px]">
+            <h1 className="hidden text-2xl font-light md:flex text-zinc-300">
               Sorting Visualizer
             </h1>
-            <div className="flex items-center justify-center gap-6">
+            <div className="flex gap-6 justify-center items-center">
               <Slider
                 isDisabled={isSorting}
                 value={speed}
@@ -112,21 +111,21 @@ export default function HomePage() {
                 }
               />
               <button
-                className="rounded-lg bg-zinc-300 p-4 text-black"
+                className="w-24 p-3 text-black rounded-lg disabled:opacity-50 bg-zinc-200 disabled:bg-zinc-600"
                 onClick={!sorted ? () => sortArray(array) : () => resetArray()}
                 disabled={isSorting}
               >
-                {!sorted ? "Start" : "Reset"}
+                {isSorting ? "Sorting..." : !sorted ? "Start" : "Reset"}
               </button>
             </div>
           </div>
           <div className="relative h-[calc(100vh-66px)] w-full">
-            <div className="absolute bottom-[32px] left-0 right-0 mx-auto flex w-full items-end justify-center">
+            <div className="flex absolute right-0 left-0 justify-center items-end mx-auto w-full bottom-[32px]">
               {/* Lines to be sorted */}
               {array.map((value, index) => (
                 <div
                   key={index}
-                  className="array-line default-line-color relative mx-0.5 w-1 rounded-lg opacity-70 shadow-lg"
+                  className="relative mx-0.5 w-1 rounded-lg shadow-lg opacity-70 array-line default-line-color"
                   style={{ height: `${value}px` }}
                 ></div>
               ))}

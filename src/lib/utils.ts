@@ -12,9 +12,9 @@ export function delay(ms: number) {
 export const algorithmOptions = [
   { value: "bubble", label: "Bubble Sort" },
   { value: "quick", label: "Quick Sort" },
-  { value: "merge", label: "Merge Sort" },
-  { value: "insertion", label: "Insertion Sort" },
-  { value: "selection", label: "Selection Sort" },
+  // { value: "merge", label: "Merge Sort" },
+  // { value: "insertion", label: "Insertion Sort" },
+  // { value: "selection", label: "Selection Sort" },
 ];
 
 export async function bubbleSort(
